@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "69Jn1WSAibI=",
+  "success": true,
+  "projectFilePath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj",
+  "expectedPackageFiles": [
+    "/home/satyr/.nuget/packages/microsoft.aspnetcore.openapi/9.0.10/microsoft.aspnetcore.openapi.9.0.10.nupkg.sha512",
+    "/home/satyr/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

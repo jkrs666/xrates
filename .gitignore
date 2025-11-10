@@ -1,0 +1,4 @@
+.env
+Xrates/bin/
+Xrates/obj/Debug/
+responses/

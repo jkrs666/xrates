@@ -8,6 +8,7 @@ public class ApplicationDbContext : DbContext
 
 
     public DbSet<Rate> Rates { get; set; }
+    public DbSet<Integration> Integrations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,14 +24,30 @@ public class ApplicationDbContext : DbContext
             new Rate { Id=4, UnixTs = new DateTime(2025,1,4, 0,0,0,0, DateTimeKind.Utc), Base = Currency.USD, Quote= Currency.EUR, Value= 1.4111M},
         ]
         );
+
+        modelBuilder.Entity<Integration>().HasKey(r => r.Name);
+        modelBuilder.Entity<Integration>()
+        .HasData(
+            [
+            new Integration { Name="frankfurter", Url="https://api.frankfurter.dev/v1/latest?base=USD"}
+        ]
+        );
     }
 }
 
 public class Rate
 {
-    public int Id { get; set; }
-    public DateTime UnixTs { get; set; }
-    public Currency Base { get; set; }
-    public Currency Quote { get; set; }
-    public decimal Value { get; set; }
+    required public int Id { get; set; }
+    required public DateTime UnixTs { get; set; }
+    required public Currency Base { get; set; }
+    required public Currency Quote { get; set; }
+    required public decimal Value { get; set; }
+}
+
+public class Integration
+{
+    required public string Name { get; set; }
+    required public string Url { get; set; }
+    //TODO: encrypt
+    //public string ApiKey { get; set; }
 }

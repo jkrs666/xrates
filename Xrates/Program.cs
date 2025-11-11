@@ -10,6 +10,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddHostedService<FetchService>();
+builder.Services.AddHttpClient<ExternalApiService>();
 
 builder.Services.AddOpenApi();
 

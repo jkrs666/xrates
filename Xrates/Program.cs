@@ -9,7 +9,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-//https://aka.ms/aspnet/openapi
+builder.Services.AddHostedService<FetchService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

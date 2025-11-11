@@ -7,16 +7,18 @@ namespace Xrates.Controllers;
 public class RatesController : ControllerBase
 {
 
-    private readonly ILogger<WeatherForecastController> _logger;
+    private readonly ILogger<RatesController> _logger;
+    private readonly ApplicationDbContext _dbcontext;
 
-    public RatesController(ILogger<WeatherForecastController> logger)
+    public RatesController(ILogger<RatesController> logger, ApplicationDbContext dbcontext)
     {
         _logger = logger;
+        _dbcontext = dbcontext;
     }
 
     [HttpGet(Name = "GetRates")]
     public IEnumerable<Rate> Get()
     {
-        return [new Rate { Name = "test" }];
+        return _dbcontext.Rates.ToList();
     }
 }

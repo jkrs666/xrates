@@ -1,11 +1,15 @@
+using Microsoft.Extensions.Caching.Distributed;
+
 public class FetchService : BackgroundService
 {
     private readonly ILogger<FetchService> _logger;
+    private readonly IServiceProvider _serviceProvider;
     private int _executionCount;
 
-    public FetchService(ILogger<FetchService> logger)
+    public FetchService(ILogger<FetchService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -33,10 +37,6 @@ public class FetchService : BackgroundService
     private async Task DoWork()
     {
         int count = Interlocked.Increment(ref _executionCount);
-
-        // Simulate work
-        await Task.Delay(TimeSpan.FromSeconds(2));
-
         _logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
     }
 }

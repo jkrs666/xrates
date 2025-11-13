@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,12 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Xrates.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251111220632_Integration")]
-    partial class Integration
+    [DbContext(typeof(AppDbContext))]
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +32,7 @@ namespace Xrates.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Integrations");
+                    b.ToTable("integrations");
 
                     b.HasData(
                         new
@@ -53,13 +50,11 @@ namespace Xrates.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Base")
-                        .HasColumnType("integer");
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("Quote")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UnixTs")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Value")
@@ -67,39 +62,35 @@ namespace Xrates.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rates");
+                    b.ToTable("rates");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Base = 150,
-                            Quote = 46,
-                            UnixTs = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Currency = "EUR",
+                            Timestamp = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = 1.1111m
                         },
                         new
                         {
                             Id = 2,
-                            Base = 150,
-                            Quote = 46,
-                            UnixTs = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Currency = "EUR",
+                            Timestamp = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = 1.2111m
                         },
                         new
                         {
                             Id = 3,
-                            Base = 150,
-                            Quote = 46,
-                            UnixTs = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Currency = "EUR",
+                            Timestamp = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = 1.3111m
                         },
                         new
                         {
                             Id = 4,
-                            Base = 150,
-                            Quote = 46,
-                            UnixTs = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Currency = "EUR",
+                            Timestamp = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = 1.4111m
                         });
                 });

@@ -8,26 +8,26 @@ public class IntegrationsController : ControllerBase
 {
 
     private readonly ILogger<IntegrationsController> _logger;
-    private readonly ApplicationDbContext _dbcontext;
     private readonly ExternalApiService _externalApiService;
+    private readonly RepositoryService _repositoryService;
 
-    public IntegrationsController(ILogger<IntegrationsController> logger, ApplicationDbContext dbcontext, ExternalApiService externalApiService)
+    public IntegrationsController(ILogger<IntegrationsController> logger, ExternalApiService externalApiService, RepositoryService repositoryService)
     {
         _logger = logger;
-        _dbcontext = dbcontext;
         _externalApiService = externalApiService;
+        _repositoryService = repositoryService;
     }
 
     [HttpGet(Name = "GetIntegrations")]
-    public IEnumerable<Integration> Get()
+    public async Task<IEnumerable<Integration>> Get()
     {
-        return _dbcontext.Integrations.ToList();
+        return await _repositoryService.GetIntegrations();
     }
 
     [HttpGet("{id}", Name = "GetIntegrationByName")]
     public async Task<Integration> GetBy(string id)
     {
-        return await _dbcontext.Integrations.FindAsync(id);
+        return await _repositoryService.GetIntegrationByName(id);
     }
 
     [HttpGet("call/{id}", Name = "CallIntegrationByName")]

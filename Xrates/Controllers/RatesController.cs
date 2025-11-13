@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Xrates.Controllers;
 
 [ApiController]
@@ -8,17 +9,23 @@ public class RatesController : ControllerBase
 {
 
     private readonly ILogger<RatesController> _logger;
-    private readonly ApplicationDbContext _dbcontext;
+    private readonly RepositoryService _repositoryService;
 
-    public RatesController(ILogger<RatesController> logger, ApplicationDbContext dbcontext)
+    public RatesController(ILogger<RatesController> logger, RepositoryService repositoryService)
     {
         _logger = logger;
-        _dbcontext = dbcontext;
+        _repositoryService = repositoryService;
     }
 
-    [HttpGet(Name = "GetRates")]
-    public IEnumerable<Rate> Get()
+    [HttpGet(Name = "GetAllRates")]
+    public async Task<IEnumerable<Rate>> GetAllRates()
     {
-        return _dbcontext.Rates.ToList();
+        return await _repositoryService.GetAllRates();
+    }
+
+    [HttpGet("{id}", Name = "GetRate")]
+    public async Task<String> GetRate(string id)
+    {
+        return await _repositoryService.GetRate(id);
     }
 }

@@ -1,23 +1,26 @@
+using Microsoft.Extensions.Caching.Distributed;
 
 public class ExternalApiService
 {
     private readonly HttpClient _httpClient;
-    private readonly ApplicationDbContext _dbcontext;
+    private readonly AppDbContext _dbcontext;
     private readonly ILogger<ExternalApiService> _logger;
+    private readonly IDistributedCache _cache;
 
 
-    public ExternalApiService(HttpClient httpClient, ApplicationDbContext dbContext, ILogger<ExternalApiService> logger)
+    public ExternalApiService(HttpClient httpClient, AppDbContext dbContext, ILogger<ExternalApiService> logger, IDistributedCache cache)
     {
         _httpClient = httpClient;
         _dbcontext = dbContext;
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<string> Call(string integrationName)
     {
         try
         {
-            var integration = await _dbcontext.Integrations.FindAsync(integrationName);
+            var integration = await _dbcontext.integrations.FindAsync(integrationName);
             if (integration == null)
             {
                 throw new Exception("not found");

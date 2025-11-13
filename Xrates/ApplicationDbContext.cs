@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+public class AppDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     { }
 
 
-    public DbSet<Rate> Rates { get; set; }
-    public DbSet<Integration> Integrations { get; set; }
+    public DbSet<Rate> rates { get; set; }
+    public DbSet<Integration> integrations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,10 +18,10 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Rate>()
         .HasData(
             [
-            new Rate { Id=1, UnixTs = new DateTime(2025,1,1, 0,0,0,0, DateTimeKind.Utc), Quote= Currency.EUR, Value= 1.1111M},
-            new Rate { Id=2, UnixTs = new DateTime(2025,1,2, 0,0,0,0, DateTimeKind.Utc), Quote= Currency.EUR, Value= 1.2111M},
-            new Rate { Id=3, UnixTs = new DateTime(2025,1,3, 0,0,0,0, DateTimeKind.Utc), Quote= Currency.EUR, Value= 1.3111M},
-            new Rate { Id=4, UnixTs = new DateTime(2025,1,4, 0,0,0,0, DateTimeKind.Utc), Quote= Currency.EUR, Value= 1.4111M},
+            new Rate { Id=1, Timestamp = new DateTime(2025,1,1, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.1111M},
+            new Rate { Id=2, Timestamp = new DateTime(2025,1,2, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.2111M},
+            new Rate { Id=3, Timestamp = new DateTime(2025,1,3, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.3111M},
+            new Rate { Id=4, Timestamp = new DateTime(2025,1,4, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.4111M},
         ]
         );
 
@@ -39,8 +39,8 @@ public class ApplicationDbContext : DbContext
 public class Rate
 {
     required public int Id { get; set; }
-    required public DateTime UnixTs { get; set; }
-    required public Currency Quote { get; set; }
+    required public DateTime Timestamp { get; set; }
+    required public String Currency { get; set; }
     required public decimal Value { get; set; }
 }
 

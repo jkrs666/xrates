@@ -18,7 +18,7 @@ public class RatesController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllRates")]
-    public async Task<IEnumerable<Rate>> GetAllRates()
+    public async Task<Dictionary<string, string>> GetAllRates()
     {
         return await _repositoryService.GetAllRates();
     }
@@ -26,6 +26,6 @@ public class RatesController : ControllerBase
     [HttpGet("{id}", Name = "GetRate")]
     public async Task<String> GetRate(string id)
     {
-        return await _repositoryService.GetRate(id);
+        return await _repositoryService.GetRate(id) ?? "";
     }
 }

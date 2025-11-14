@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "F2Hv7UyngSI=",
+  "dgSpecHash": "MTOz1XvsGko=",
   "success": true,
   "projectFilePath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj",
   "expectedPackageFiles": [
@@ -22,7 +22,6 @@
     "/home/satyr/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.10/microsoft.entityframeworkcore.relational.9.0.10.nupkg.sha512",
     "/home/satyr/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.10/microsoft.extensions.caching.abstractions.9.0.10.nupkg.sha512",
     "/home/satyr/.nuget/packages/microsoft.extensions.caching.memory/9.0.10/microsoft.extensions.caching.memory.9.0.10.nupkg.sha512",
-    "/home/satyr/.nuget/packages/microsoft.extensions.caching.stackexchangeredis/9.0.0/microsoft.extensions.caching.stackexchangeredis.9.0.0.nupkg.sha512",
     "/home/satyr/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.10/microsoft.extensions.configuration.abstractions.9.0.10.nupkg.sha512",
     "/home/satyr/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.10/microsoft.extensions.dependencyinjection.9.0.10.nupkg.sha512",
     "/home/satyr/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.10/microsoft.extensions.dependencyinjection.abstractions.9.0.10.nupkg.sha512",
@@ -36,7 +35,7 @@
     "/home/satyr/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
     "/home/satyr/.nuget/packages/npgsql.entityframeworkcore.postgresql/9.0.4/npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
     "/home/satyr/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
-    "/home/satyr/.nuget/packages/stackexchange.redis/2.7.27/stackexchange.redis.2.7.27.nupkg.sha512",
+    "/home/satyr/.nuget/packages/stackexchange.redis/2.9.32/stackexchange.redis.2.9.32.nupkg.sha512",
     "/home/satyr/.nuget/packages/system.codedom/6.0.0/system.codedom.6.0.0.nupkg.sha512",
     "/home/satyr/.nuget/packages/system.collections.immutable/7.0.0/system.collections.immutable.7.0.0.nupkg.sha512",
     "/home/satyr/.nuget/packages/system.composition/7.0.0/system.composition.7.0.0.nupkg.sha512",

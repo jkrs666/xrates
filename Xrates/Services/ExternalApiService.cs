@@ -1,19 +1,19 @@
-using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 
 public class ExternalApiService
 {
     private readonly HttpClient _httpClient;
     private readonly AppDbContext _dbcontext;
     private readonly ILogger<ExternalApiService> _logger;
-    private readonly IDistributedCache _cache;
+    private readonly IDatabase _redis;
 
 
-    public ExternalApiService(HttpClient httpClient, AppDbContext dbContext, ILogger<ExternalApiService> logger, IDistributedCache cache)
+    public ExternalApiService(HttpClient httpClient, AppDbContext dbContext, ILogger<ExternalApiService> logger, IDatabase redis)
     {
         _httpClient = httpClient;
         _dbcontext = dbContext;
         _logger = logger;
-        _cache = cache;
+        _redis = redis;
     }
 
     public async Task<string> Call(string integrationName)

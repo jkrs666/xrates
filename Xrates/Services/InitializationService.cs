@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 
 public class InitializationService : IHostedService
@@ -16,8 +16,8 @@ public class InitializationService : IHostedService
     {
         _logger.LogInformation("Initialization started");
         using var scope = _serviceProvider.CreateScope();
-        var cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
         using var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
+        var redis = scope.ServiceProvider.GetRequiredService<IDatabase>();
 
         _logger.LogInformation("Running migrations");
         await dbContext.Database.MigrateAsync();
@@ -30,7 +30,8 @@ public class InitializationService : IHostedService
 
         await Task.WhenAll(
             latestRates
-            .Select(r => cache.SetStringAsync(r.Currency, r.Value.ToString())));
+            .Select(r => redis.HashSetAsync("rates", r.Currency, r.Value.ToString()))
+    );
 
         _logger.LogInformation("Initialization finished");
     }

@@ -1,13 +1,23 @@
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
-builder.Services.AddStackExchangeRedisCache(options =>
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    var configuration = ConfigurationOptions.Parse(
+            builder.Configuration.GetConnectionString("Redis") ?? ""
+    );
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+builder.Services.AddScoped<IDatabase>(sp =>
+{
+    var redis = sp.GetRequiredService<IConnectionMultiplexer>();
+    return redis.GetDatabase();
 });
 
 builder.Services.AddScoped<RepositoryService>();

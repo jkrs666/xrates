@@ -1,29 +1,32 @@
-using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 
 public class RepositoryService
 {
     private readonly ILogger<ExternalApiService> _logger;
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
-    private readonly IDistributedCache _cache;
+    private readonly IConnectionMultiplexer _redisConnection;
     private AppDbContext _dbContext;
+    private IDatabase _redisDb;
 
-    public RepositoryService(ILogger<ExternalApiService> logger, IDbContextFactory<AppDbContext> dbContextFactory, IDistributedCache cache)
+    public RepositoryService(ILogger<ExternalApiService> logger, IDbContextFactory<AppDbContext> dbContextFactory, IConnectionMultiplexer redisConnection)
     {
-        _dbContextFactory = dbContextFactory;
         _logger = logger;
-        _cache = cache;
+        _dbContextFactory = dbContextFactory;
+        _redisConnection = redisConnection;
         _dbContext = dbContextFactory.CreateDbContext();
+        _redisDb = redisConnection.GetDatabase();
     }
 
-    public async Task<IEnumerable<Rate>> GetAllRates()
+    public async Task<Dictionary<string, string>> GetAllRates()
     {
-        return await _dbContext.rates.ToListAsync();
+        var entries = await _redisDb.HashGetAllAsync("rates");
+        return entries.ToStringDictionary();
     }
 
-    public async Task<String> GetRate(string quote)
+    public async Task<String?> GetRate(string quote)
     {
-        return await _cache.GetStringAsync(quote) ?? "null";
+        return await _redisDb.HashGetAsync("rates", quote);
     }
 
     public async Task<IEnumerable<Integration>> GetIntegrations()

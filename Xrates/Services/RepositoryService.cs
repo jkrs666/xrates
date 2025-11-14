@@ -34,8 +34,31 @@ public class RepositoryService
         return await _dbContext.integrations.ToListAsync();
     }
 
-    public async Task<Integration> GetIntegrationByName(string id)
+    public async Task<Integration> GetIntegrationById(string id)
     {
         return await _dbContext.integrations.FirstAsync(i => i.Name == id);
+    }
+
+    public async Task<int> CreateIntegration(Integration integration)
+    {
+        await _dbContext.integrations.AddAsync(integration);
+        return await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<int> UpdateIntegration(string id, Integration newIntegration)
+    {
+        return await _dbContext.integrations
+        .Where(i => i.Name == id)
+        .ExecuteUpdateAsync(setters => setters
+            .SetProperty(i => i.Name, newIntegration.Name)
+            .SetProperty(i => i.Url, newIntegration.Url)
+    );
+    }
+
+    public async Task<int> DeleteIntegration(string id)
+    {
+        return await _dbContext.integrations
+        .Where(i => i.Name == id)
+        .ExecuteDeleteAsync();
     }
 }

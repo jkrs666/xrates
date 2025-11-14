@@ -1,7 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.HttpLogging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpLogging(o =>
+{
+    o.CombineLogs = true;
+    o.LoggingFields = HttpLoggingFields.All;
+});
 
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
@@ -22,24 +29,17 @@ builder.Services.AddScoped<IDatabase>(sp =>
 
 builder.Services.AddScoped<RepositoryService>();
 builder.Services.AddHttpClient<ExternalApiService>();
-
 builder.Services.AddHostedService<InitializationService>();
 //builder.Services.AddHostedService<FetchService>();
-
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
+app.MapOpenApi();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
+app.UseHttpLogging();
 
 app.Run();

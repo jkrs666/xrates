@@ -32,7 +32,8 @@ builder.Services.AddScoped<ConvertService>();
 builder.Services.AddHttpClient<ExternalApiService>();
 builder.Services.AddHostedService<InitializationService>();
 //builder.Services.AddHostedService<FetchService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new DecimalConverter()));
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

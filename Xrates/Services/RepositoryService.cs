@@ -29,6 +29,15 @@ public class RepositoryService
         return await _redisDb.HashGetAsync("rates", quote);
     }
 
+    public async Task<List<Rate>> GetHistoricalRatesBaseUsd(DateTime start, DateTime end, string to)
+    {
+        return await _dbContext.rates
+            .Where(r => r.Currency == to && r.Timestamp > start && r.Timestamp < end)
+            .GroupBy(r => DateOnly.FromDateTime(r.Timestamp))
+            .Select(g => g.OrderByDescending(r => r.Timestamp).First())
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<Integration>> GetIntegrations()
     {
         return await _dbContext.integrations.ToListAsync();

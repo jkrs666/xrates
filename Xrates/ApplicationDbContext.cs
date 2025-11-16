@@ -18,10 +18,19 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Rate>()
         .HasData(
             [
-            new Rate { Id=1, Timestamp = new DateTime(2025,1,1, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.1111M},
-            new Rate { Id=2, Timestamp = new DateTime(2025,1,2, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.2111M},
-            new Rate { Id=3, Timestamp = new DateTime(2025,1,3, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.3111M},
-            new Rate { Id=4, Timestamp = new DateTime(2025,1,4, 0,0,0,0, DateTimeKind.Utc), Currency= "EUR", Value= 1.4111M},
+        new  Rate  (  Id:1,   Timestamp  :  new  DateTime(2025,1,1,  0,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.1011M),
+        new  Rate  (  Id:2,   Timestamp  :  new  DateTime(2025,1,1,  2,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.1211M),
+        new  Rate  (  Id:3,   Timestamp  :  new  DateTime(2025,1,1,  1,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.1111M),
+        new  Rate  (  Id:4,   Timestamp  :  new  DateTime(2025,1,2,  3,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.2311M),
+        new  Rate  (  Id:5,   Timestamp  :  new  DateTime(2025,1,2,  2,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.2211M),
+        new  Rate  (  Id:6,   Timestamp  :  new  DateTime(2025,1,2,  4,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.2411M),
+        new  Rate  (  Id:7,   Timestamp  :  new  DateTime(2025,1,2,  1,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.2111M),
+        new  Rate  (  Id:8,   Timestamp  :  new  DateTime(2025,1,3,  1,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.3111M),
+        new  Rate  (  Id:9,   Timestamp  :  new  DateTime(2025,1,3,  2,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.3211M),
+        new  Rate  (  Id:10,   Timestamp  :  new  DateTime(2025,1,3,  3,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.3311M),
+        new  Rate  (  Id:11,   Timestamp  :  new  DateTime(2025,1,4,  3,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.4311M),
+        new  Rate  (  Id:12,  Timestamp  :  new  DateTime(2025,1,4,  2,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.4211M),
+        new  Rate  (  Id:13,  Timestamp  :  new  DateTime(2025,1,4,  1,0,0,0,  DateTimeKind.Utc),  Currency:  "EUR",  Value:  1.4111M),
         ]
         );
 
@@ -29,25 +38,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Integration>()
         .HasData(
             [
-            new Integration { Name="frankfurter", Url="https://api.frankfurter.dev/v1/latest?base=USD"}
+            new Integration ( Name:"frankfurter", Url:"https://api.frankfurter.dev/v1/latest?base=USD")
         ]
         );
     }
 }
 
-// Store only with USD as base
-public class Rate
-{
-    required public int Id { get; set; }
-    required public DateTime Timestamp { get; set; }
-    required public String Currency { get; set; }
-    required public decimal Value { get; set; }
-}
-
-public class Integration
-{
-    required public string Name { get; set; }
-    required public string Url { get; set; }
-    //TODO: encrypt
-    //public string ApiKey { get; set; }
-}

@@ -39,7 +39,6 @@ public class HistoricalController : ControllerBase
         }
 
         return new HistoricalResponse(From: from, To: to, Start: start, End: end, Rates: historicalRates);
-
     }
 }
 

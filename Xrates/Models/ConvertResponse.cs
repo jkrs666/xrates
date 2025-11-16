@@ -1,4 +1,4 @@
 public record ConvertResponse(
-decimal Rate,
-decimal Amount
+        decimal Rate,
+        decimal Amount
 );

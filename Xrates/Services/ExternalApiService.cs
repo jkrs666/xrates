@@ -1,4 +1,5 @@
 using StackExchange.Redis;
+using System.Text.Json.Serialization;
 
 public class ExternalApiService
 {
@@ -7,6 +8,20 @@ public class ExternalApiService
     private readonly ILogger<ExternalApiService> _logger;
     private readonly IDatabase _redis;
 
+    public class XApiResponse
+    {
+        //[JsonPropertyName("amount")]
+        //public decimal Amount { get; set; }
+
+        //[JsonPropertyName("base")]
+        //public string Base { get; set; }
+
+        //[JsonPropertyName("date")]
+        //public string Date { get; set; }
+
+        [JsonPropertyName("rates")]
+        required public Dictionary<string, decimal> Rates { get; set; }
+    }
 
     public ExternalApiService(HttpClient httpClient, AppDbContext dbContext, ILogger<ExternalApiService> logger, IDatabase redis)
     {
@@ -16,7 +31,7 @@ public class ExternalApiService
         _redis = redis;
     }
 
-    public async Task<string> Call(string integrationName)
+    public async Task<XApiResponse?> Call(string integrationName)
     {
         try
         {
@@ -30,18 +45,13 @@ public class ExternalApiService
             var response = await _httpClient.GetAsync(integration.Url);
             response.EnsureSuccessStatusCode();
 
-            if (response.Content == null)
-            {
-                throw new Exception("null response");
-            }
-
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadFromJsonAsync<XApiResponse>();
 
         }
         catch (Exception e)
         {
             _logger.LogError(e.Message);
-            return e.Message;
+            return null;
         }
 
     }

@@ -24,7 +24,12 @@ public class InitializationService : IHostedService
         await dbContext.Database.MigrateAsync();
 
         _logger.LogInformation("Running fetch service");
-        await externalApiService.Call("frankfurter");
+        var resp = await externalApiService.Call("frankfurter");
+        if (resp is not null)
+        {
+            resp.Rates.ToList().ForEach(kv => dbContext.rates.Add(new Rate(DateTime.UtcNow, kv.Key, kv.Value)));
+            await dbContext.SaveChangesAsync();
+        }
 
         _logger.LogInformation("Warming cache");
         var latestRates = await dbContext.rates

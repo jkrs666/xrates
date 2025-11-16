@@ -28,6 +28,7 @@ builder.Services.AddScoped<IDatabase>(sp =>
 });
 
 builder.Services.AddScoped<RepositoryService>();
+builder.Services.AddScoped<ConvertService>();
 builder.Services.AddHttpClient<ExternalApiService>();
 builder.Services.AddHostedService<InitializationService>();
 //builder.Services.AddHostedService<FetchService>();

@@ -18,9 +18,13 @@ public class InitializationService : IHostedService
         using var scope = _serviceProvider.CreateScope();
         using var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
         var redis = scope.ServiceProvider.GetRequiredService<IDatabase>();
+        var externalApiService = scope.ServiceProvider.GetRequiredService<ExternalApiService>();
 
         _logger.LogInformation("Running migrations");
         await dbContext.Database.MigrateAsync();
+
+        _logger.LogInformation("Running fetch service");
+        await externalApiService.Call("frankfurter");
 
         _logger.LogInformation("Warming cache");
         var latestRates = await dbContext.rates

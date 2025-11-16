@@ -116,10 +116,5 @@ public class IntegrationsController : ControllerBase
         return Ok(new { message = $"{id} integration deleted" });
     }
 
-    // TODO: remove
-    [HttpGet("call/{id}", Name = "CallIntegrationByName")]
-    public async Task<string> CallBy(string id)
-    {
-        return await _externalApiService.Call(id);
-    }
+
 }

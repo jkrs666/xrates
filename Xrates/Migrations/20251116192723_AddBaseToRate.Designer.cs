@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Xrates.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116192723_AddBaseToRate")]
+    partial class AddBaseToRate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,28 +27,20 @@ namespace Xrates.Migrations
             modelBuilder.Entity("Integration", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<int>("FreqSeconds")
-                        .HasColumnType("integer")
-                        .HasColumnName("freqseconds");
+                        .HasColumnType("text");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("url");
+                        .HasColumnType("text");
 
-                    b.HasKey("Name")
-                        .HasName("pk_integrations");
+                    b.HasKey("Name");
 
-                    b.ToTable("integrations", (string)null);
+                    b.ToTable("Integrations");
 
                     b.HasData(
                         new
                         {
                             Name = "frankfurter",
-                            FreqSeconds = 5,
                             Url = "https://api.frankfurter.dev/v1/latest?base=USD"
                         });
                 });
@@ -54,33 +49,27 @@ namespace Xrates.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Base")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("base");
+                        .HasColumnType("text");
 
                     b.Property<string>("Quote")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("quote");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("timestamp");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("numeric")
-                        .HasColumnName("value");
+                        .HasColumnType("numeric");
 
-                    b.HasKey("Id")
-                        .HasName("pk_rates");
+                    b.HasKey("Id");
 
-                    b.ToTable("rates", (string)null);
+                    b.ToTable("Rates");
 
                     b.HasData(
                         new

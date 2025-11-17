@@ -4,5 +4,5 @@ public record HistoricalResponse
     string To,
     DateTime Start,
     DateTime End,
-    List<HistoricalRate> Rates
+    IEnumerable<HistoricalRate> Rates
 );

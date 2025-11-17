@@ -1,12 +1,12 @@
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.EntityFrameworkCore;
 
-public class FetchService : BackgroundService
+public class PeriodicFetchService : BackgroundService
 {
-    private readonly ILogger<FetchService> _logger;
+    private readonly ILogger<PeriodicFetchService> _logger;
     private readonly IServiceProvider _serviceProvider;
     private int _executionCount;
 
-    public FetchService(ILogger<FetchService> logger, IServiceProvider serviceProvider)
+    public PeriodicFetchService(ILogger<PeriodicFetchService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -15,9 +15,6 @@ public class FetchService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Timed Hosted Service running.");
-
-        // When the timer should have no due-time, then do the work once now.
-        await DoWork();
 
         using PeriodicTimer timer = new(TimeSpan.FromSeconds(1));
 
@@ -37,6 +34,19 @@ public class FetchService : BackgroundService
     private async Task DoWork()
     {
         int count = Interlocked.Increment(ref _executionCount);
+        var repositoryService = _serviceProvider.GetRequiredService<RepositoryService>();
+        var externalApiService = _serviceProvider.GetRequiredService<ExternalApiService>();
+        var integrations = await repositoryService.GetIntegrations();
+
+        var calls = integrations
+            .Where(i => (count % i.FreqSeconds) == 0)
+            .Select(async i =>
+            {
+                var res = await externalApiService.Call(i);
+                var inserts = repositoryService.SaveRatesCombinations(res.Timestamp, res.Rates);
+                _logger.LogInformation(inserts.ToString());
+            }).ToList();
+
         _logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
     }
 }

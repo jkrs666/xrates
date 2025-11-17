@@ -11,7 +11,11 @@ builder.Services.AddHttpLogging(o =>
 });
 
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
+    options
+    .UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
+    .UseLowerCaseNamingConvention()
+);
+
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
@@ -31,7 +35,7 @@ builder.Services.AddScoped<RepositoryService>();
 builder.Services.AddScoped<ConvertService>();
 builder.Services.AddHttpClient<ExternalApiService>();
 builder.Services.AddHostedService<InitializationService>();
-//builder.Services.AddHostedService<FetchService>();
+builder.Services.AddHostedService<PeriodicFetchService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new DecimalConverter()));
 builder.Services.AddOpenApi();

@@ -1,4 +1,4 @@
 public record HistoricalRate(
-        string Date,
+        DateTime Date,
         decimal Value
 );

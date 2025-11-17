@@ -28,6 +28,7 @@ public class InitializationService : IHostedService
         using var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
         var redis = scope.ServiceProvider.GetRequiredService<IDatabase>();
         var externalApiService = scope.ServiceProvider.GetRequiredService<ExternalApiService>();
+        var repositoryService = scope.ServiceProvider.GetRequiredService<RepositoryService>();
 
         _logger.LogInformation("Running migrations");
         await dbContext.Database.MigrateAsync();
@@ -38,33 +39,27 @@ public class InitializationService : IHostedService
 
         data.Rates.ToList().ForEach(kv =>
         {
+            var rates = new List<Rate>();
             var date = DateTime.Parse(kv.Key).ToUniversalTime();
-            dbContext.Add(new Rate(date, "USD", 1.0M));
-            kv.Value.ToList().ForEach(rkv =>
-                    dbContext.Add(new Rate(date, rkv.Key, rkv.Value)));
+            kv.Value.ToList().ForEach(rkv => rates.Add(new Rate(date, "USD", rkv.Key, rkv.Value)));
+            repositoryService.SaveRatesCombinations(rates.Last().Timestamp, rates);
         });
 
-        await dbContext.SaveChangesAsync();
-
-        _logger.LogInformation("Running fetch service");
-        var resp = await externalApiService.Call("frankfurter");
-        if (resp is not null)
-        {
-            resp.Rates.ToList().ForEach(kv => dbContext.rates.Add(new Rate(DateTime.UtcNow, kv.Key, kv.Value)));
-            await dbContext.SaveChangesAsync();
-        }
 
         _logger.LogInformation("Warming cache");
-        var latestRates = await dbContext.rates
-        .GroupBy(r => r.Currency)
-        .Select(g => g.OrderByDescending(r => r.Timestamp).First())
+        var latestRates = await dbContext.Rates
+        .GroupBy(r => new { r.Base, r.Quote, r.Timestamp })
+        .Select(g => g.OrderBy(r => r.Timestamp).First())
         .ToListAsync();
 
-        await Task.WhenAll(
-            latestRates
-            .Select(r => redis.HashSetAsync("rates", r.Currency, r.Value.ToString()))
-    );
+        var entries = latestRates
+        .Select(r => new HashEntry(
+                $"{r.Base}-{r.Quote}",
+        JsonSerializer.Serialize(new RateCompact(Rate: Math.Round(r.Value, 6), Ts: r.Timestamp))
+                ))
+    .ToArray();
 
+        await redis.HashSetAsync("rates", entries);
         _logger.LogInformation("Initialization finished");
     }
 

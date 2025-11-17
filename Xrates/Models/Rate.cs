@@ -1,8 +1,8 @@
-// Store only with USD as base
 public record Rate
 (
     DateTime Timestamp,
-    String Currency,
+    String Base,
+    String Quote,
     decimal Value
 )
 {

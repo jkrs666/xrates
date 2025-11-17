@@ -1,59 +1,72 @@
 using StackExchange.Redis;
-using System.Text.Json.Serialization;
+using System.Text.Json;
+
 
 public class ExternalApiService
 {
     private readonly HttpClient _httpClient;
-    private readonly AppDbContext _dbcontext;
     private readonly ILogger<ExternalApiService> _logger;
     private readonly IDatabase _redis;
+    private readonly ConvertService _convertService;
 
-    public class XApiResponse
-    {
-        //[JsonPropertyName("amount")]
-        //public decimal Amount { get; set; }
-
-        //[JsonPropertyName("base")]
-        //public string Base { get; set; }
-
-        //[JsonPropertyName("date")]
-        //public string Date { get; set; }
-
-        [JsonPropertyName("rates")]
-        required public Dictionary<string, decimal> Rates { get; set; }
-    }
-
-    public ExternalApiService(HttpClient httpClient, AppDbContext dbContext, ILogger<ExternalApiService> logger, IDatabase redis)
+    public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IDatabase redis, ConvertService convertService)
     {
         _httpClient = httpClient;
-        _dbcontext = dbContext;
         _logger = logger;
         _redis = redis;
+        _convertService = convertService;
     }
 
-    public async Task<XApiResponse?> Call(string integrationName)
+    public async Task<ExternalApiResponse> Call(Integration integration)
     {
         try
         {
-            var integration = await _dbcontext.integrations.FindAsync(integrationName);
-            if (integration == null)
-            {
-                throw new Exception("not found");
-            }
-
             _logger.LogInformation($"calling {integration.Name}: {integration.Url}");
             var response = await _httpClient.GetAsync(integration.Url);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<XApiResponse>();
-
+            var jsonString = await response.Content.ReadAsStringAsync();
+            using JsonDocument doc = JsonDocument.Parse(jsonString);
+            var ratesElement = doc.RootElement.GetProperty("rates");
+            var ratesDict = JsonSerializer.Deserialize<Dictionary<string, decimal>>(ratesElement.GetRawText());
+            var timestamp = ExtractTimestamp(doc.RootElement.GetProperty("date"));
+            var ratesUsd = ratesDict.ToList().Select(r => new Rate(
+                    Timestamp: timestamp,
+                    Base: "USD",
+                    Quote: r.Key,
+                    Value: r.Value
+            )).ToList();
+            return new ExternalApiResponse(timestamp, ratesUsd);
         }
         catch (Exception e)
         {
             _logger.LogError(e.Message);
-            return null;
+            return new ExternalApiResponse(DateTime.UtcNow, new List<Rate>());
         }
+    }
 
+
+    private DateTime ExtractTimestamp(JsonElement dateElement)
+    {
+        DateTime timestamp = DateTime.UtcNow;
+        switch (dateElement.ValueKind)
+        {
+            case JsonValueKind.String:
+                timestamp = new DateTime(DateOnly.Parse(dateElement.GetString()), new TimeOnly(0, 0), DateTimeKind.Utc);
+                break;
+            case JsonValueKind.Number:
+                var t = dateElement.GetInt64();
+                if (t < 10000000000)
+                {
+                    timestamp = DateTimeOffset.FromUnixTimeSeconds(t).UtcDateTime;
+                }
+                else
+                {
+                    timestamp = DateTimeOffset.FromUnixTimeMilliseconds(t).UtcDateTime;
+                }
+                break;
+        }
+        return timestamp;
     }
 
 }

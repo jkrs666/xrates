@@ -18,7 +18,7 @@ public class RatesController : ControllerBase
     }
 
     [HttpGet(Name = "GetAllRates")]
-    public async Task<Dictionary<string, string>> GetAllRates()
+    public async Task<Dictionary<string, RateCompact>> GetAllRates()
     {
         return await _repositoryService.GetAllRates();
     }

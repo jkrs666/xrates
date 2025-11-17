@@ -81,8 +81,8 @@ public class RepositoryService
 
     public async Task<List<Integration>> GetEnabledIntegrationsSorted()
     {
+        //TODO: redis field with expiration
         return await _dbContext.Integrations.Where(i => i.Enabled == true).OrderBy(i => i.Priority).ToListAsync();
-
     }
 
     public async Task<int> DisableIntegration(string id)

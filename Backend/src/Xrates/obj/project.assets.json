@@ -2948,6 +2948,7 @@
     "net9.0": [
       "EFCore.NamingConventions >= 9.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.10",
+      "Microsoft.EntityFrameworkCore >= 9.0.10",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.10",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4",
       "StackExchange.Redis >= 2.9.32"
@@ -3002,6 +3003,10 @@
             "version": "[9.0.0, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
+            "target": "Package",
+            "version": "[9.0.10, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[9.0.10, )"
           },

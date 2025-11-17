@@ -1,11 +1,8 @@
-using StackExchange.Redis;
-using Microsoft.EntityFrameworkCore;
-
 public class ConvertService
 {
     private readonly ILogger<ExternalApiService> _logger;
 
-    public ConvertService(ILogger<ExternalApiService> logger, IDbContextFactory<AppDbContext> dbContextFactory, IConnectionMultiplexer redisConnection)
+    public ConvertService(ILogger<ExternalApiService> logger)
     {
         _logger = logger;
     }

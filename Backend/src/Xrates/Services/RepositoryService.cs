@@ -130,6 +130,23 @@ public class RepositoryService
         return _dbContext.SaveChanges();
     }
 
+    public async Task RefreshCache()
+    {
+        var latestRates = await _dbContext.Rates
+            .GroupBy(r => new { r.Base, r.Quote, r.Timestamp })
+            .Select(g => g.OrderBy(r => r.Timestamp).First())
+            .ToListAsync();
+
+        var entries = latestRates
+            .Select(r => new HashEntry(
+                        $"{r.Base}-{r.Quote}",
+                        JsonSerializer.Serialize(new RateCompact(Rate: Math.Round(r.Value, 6), Ts: r.Timestamp))
+            ))
+            .ToArray();
+
+        await _redisDb.HashSetAsync("rates", entries);
+    }
+
 
 
 }

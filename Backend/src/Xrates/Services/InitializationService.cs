@@ -45,21 +45,9 @@ public class InitializationService : IHostedService
             repositoryService.SaveRatesCombinations(rates.Last().Timestamp, rates);
         });
 
-
         _logger.LogInformation("Warming cache");
-        var latestRates = await dbContext.Rates
-        .GroupBy(r => new { r.Base, r.Quote, r.Timestamp })
-        .Select(g => g.OrderBy(r => r.Timestamp).First())
-        .ToListAsync();
+        await repositoryService.RefreshCache();
 
-        var entries = latestRates
-        .Select(r => new HashEntry(
-                $"{r.Base}-{r.Quote}",
-        JsonSerializer.Serialize(new RateCompact(Rate: Math.Round(r.Value, 6), Ts: r.Timestamp))
-                ))
-    .ToArray();
-
-        await redis.HashSetAsync("rates", entries);
         _logger.LogInformation("Initialization finished");
     }
 

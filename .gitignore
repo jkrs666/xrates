@@ -1,4 +1,4 @@
 .env
-Xrates/bin/
-Xrates/obj/Debug/
+**/bin/
+**/obj/Debug/
 responses/

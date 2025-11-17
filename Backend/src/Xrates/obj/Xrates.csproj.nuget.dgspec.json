@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj": {}
+    "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/src/Xrates/Xrates.csproj": {}
   },
   "projects": {
-    "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj": {
+    "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/src/Xrates/Xrates.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj",
+        "projectUniqueName": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/src/Xrates/Xrates.csproj",
         "projectName": "Xrates",
-        "projectPath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/Xrates.csproj",
+        "projectPath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/src/Xrates/Xrates.csproj",
         "packagesPath": "/home/satyr/.nuget/packages/",
-        "outputPath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Xrates/obj/",
+        "outputPath": "/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/src/Xrates/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/satyr/.nuget/NuGet/NuGet.Config"

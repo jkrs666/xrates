@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{14492DB2-DB30-4E7C-BD11-E633A9214263}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xrates", "src\Xrates\Xrates.csproj", "{5E396219-18B0-4A23-833E-9D787BAB4362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E791274F-3B1A-4265-BDC1-5B872B1444BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XratesTests", "test\XratesTests\XratesTests.csproj", "{67C45884-ACCF-4B7D-BC82-45D6B526CA69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E396219-18B0-4A23-833E-9D787BAB4362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E396219-18B0-4A23-833E-9D787BAB4362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E396219-18B0-4A23-833E-9D787BAB4362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E396219-18B0-4A23-833E-9D787BAB4362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67C45884-ACCF-4B7D-BC82-45D6B526CA69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67C45884-ACCF-4B7D-BC82-45D6B526CA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67C45884-ACCF-4B7D-BC82-45D6B526CA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67C45884-ACCF-4B7D-BC82-45D6B526CA69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E396219-18B0-4A23-833E-9D787BAB4362} = {14492DB2-DB30-4E7C-BD11-E633A9214263}
+		{67C45884-ACCF-4B7D-BC82-45D6B526CA69} = {E791274F-3B1A-4265-BDC1-5B872B1444BE}
+	EndGlobalSection
+EndGlobal

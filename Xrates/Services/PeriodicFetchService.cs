@@ -4,7 +4,7 @@ public class PeriodicFetchService : BackgroundService
 {
     private readonly ILogger<PeriodicFetchService> _logger;
     private readonly IServiceProvider _serviceProvider;
-    private int _executionCount;
+    private int _executionCount = -1;
 
     public PeriodicFetchService(ILogger<PeriodicFetchService> logger, IServiceProvider serviceProvider)
     {
@@ -34,19 +34,47 @@ public class PeriodicFetchService : BackgroundService
     private async Task DoWork()
     {
         int count = Interlocked.Increment(ref _executionCount);
-        var repositoryService = _serviceProvider.GetRequiredService<RepositoryService>();
-        var externalApiService = _serviceProvider.GetRequiredService<ExternalApiService>();
-        var integrations = await repositoryService.GetIntegrations();
-
-        var calls = integrations
-            .Where(i => (count % i.FreqSeconds) == 0)
-            .Select(async i =>
-            {
-                var res = await externalApiService.Call(i);
-                var inserts = repositoryService.SaveRatesCombinations(res.Timestamp, res.Rates);
-                _logger.LogInformation(inserts.ToString());
-            }).ToList();
-
         _logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
+
+        var repositoryService = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<RepositoryService>();
+        var integrations = await repositoryService.GetEnabledIntegrationsSorted();
+        var primaryIntegration = integrations.First();
+
+        // tick, continue
+        if (count != 0 && count % primaryIntegration.FreqSeconds != 0) return;
+
+        bool success;
+        success = await FetchAndInsert(primaryIntegration, repositoryService);
+        if (success) return;
+
+        var backupIntegrations = integrations.Skip(1);
+        foreach (Integration i in backupIntegrations)
+        {
+            success = await FetchAndInsert(i, repositoryService);
+            if (success) return;
+        }
+
+    }
+
+    private async Task<bool> FetchAndInsert(Integration integration, RepositoryService repositoryService)
+    {
+        var externalApiService = _serviceProvider.GetRequiredService<ExternalApiService>();
+
+        try
+        {
+            _logger.LogInformation($"Fetching {integration.Name}");
+            var res = await externalApiService.Call(integration);
+            var inserts = repositoryService.SaveRatesCombinations(res.Timestamp, res.Rates);
+            _logger.LogInformation("Inserted {} rates.", inserts.ToString());
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{}({}) integration call failed.", integration.Name, integration.Url);
+            _logger.LogError(e.Message);
+            repositoryService.DisableIntegration(integration.Name);
+            return false;
+        }
+
     }
 }

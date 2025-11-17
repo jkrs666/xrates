@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Xrates.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251117144841_AddEnabledToIntegration")]
+    partial class AddEnabledToIntegration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,26 +55,10 @@ namespace Xrates.Migrations
                     b.HasData(
                         new
                         {
-                            Name = "errorTest",
-                            Enabled = true,
-                            FreqSeconds = 10,
-                            Priority = 0,
-                            Url = "invalidUrl"
-                        },
-                        new
-                        {
-                            Name = "example",
-                            Enabled = true,
-                            FreqSeconds = 10,
-                            Priority = 0,
-                            Url = "https://example.com"
-                        },
-                        new
-                        {
                             Name = "frankfurter",
                             Enabled = true,
-                            FreqSeconds = 10,
-                            Priority = 1,
+                            FreqSeconds = 5,
+                            Priority = 0,
                             Url = "https://api.frankfurter.dev/v1/latest?base=USD"
                         });
                 });

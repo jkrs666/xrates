@@ -19,30 +19,22 @@ public class ExternalApiService
 
     public async Task<ExternalApiResponse> Call(Integration integration)
     {
-        try
-        {
-            _logger.LogInformation($"calling {integration.Name}: {integration.Url}");
-            var response = await _httpClient.GetAsync(integration.Url);
-            response.EnsureSuccessStatusCode();
+        _logger.LogInformation($"calling {integration.Name}: {integration.Url}");
+        var response = await _httpClient.GetAsync(integration.Url);
+        response.EnsureSuccessStatusCode();
 
-            var jsonString = await response.Content.ReadAsStringAsync();
-            using JsonDocument doc = JsonDocument.Parse(jsonString);
-            var ratesElement = doc.RootElement.GetProperty("rates");
-            var ratesDict = JsonSerializer.Deserialize<Dictionary<string, decimal>>(ratesElement.GetRawText());
-            var timestamp = ExtractTimestamp(doc.RootElement.GetProperty("date"));
-            var ratesUsd = ratesDict.ToList().Select(r => new Rate(
-                    Timestamp: timestamp,
-                    Base: "USD",
-                    Quote: r.Key,
-                    Value: r.Value
-            )).ToList();
-            return new ExternalApiResponse(timestamp, ratesUsd);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return new ExternalApiResponse(DateTime.UtcNow, new List<Rate>());
-        }
+        var jsonString = await response.Content.ReadAsStringAsync();
+        using JsonDocument doc = JsonDocument.Parse(jsonString);
+        var ratesElement = doc.RootElement.GetProperty("rates");
+        var ratesDict = JsonSerializer.Deserialize<Dictionary<string, decimal>>(ratesElement.GetRawText());
+        var timestamp = ExtractTimestamp(doc.RootElement.GetProperty("date"));
+        var ratesUsd = ratesDict.ToList().Select(r => new Rate(
+                Timestamp: timestamp,
+                Base: "USD",
+                Quote: r.Key,
+                Value: r.Value
+        )).ToList();
+        return new ExternalApiResponse(timestamp, ratesUsd);
     }
 
 

@@ -60,7 +60,7 @@ public class IntegrationsController : ControllerBase
     }
 
     [HttpPut("{id}", Name = "UpdateIntegration")]
-    public async Task<IActionResult> Update(string id, [FromBody] Integration integration)
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateIntegrationParams uip)
     {
         if (!ModelState.IsValid)
         {
@@ -70,7 +70,7 @@ public class IntegrationsController : ControllerBase
         int count;
         try
         {
-            count = await _repositoryService.UpdateIntegration(id, integration);
+            count = await _repositoryService.UpdateIntegration(id, uip);
         }
         catch (Exception e)
         {
@@ -85,11 +85,7 @@ public class IntegrationsController : ControllerBase
             return BadRequest(new { error = "Nothing updated" });
         }
 
-        return Ok(new
-        {
-            message = "Integration updated",
-            integration = integration
-        });
+        return Ok(new { message = $"{id} integration updated" });
     }
 
     [HttpDelete("{id}", Name = "DeleteIntegration")]
@@ -114,6 +110,4 @@ public class IntegrationsController : ControllerBase
         }
         return Ok(new { message = $"{id} integration deleted" });
     }
-
-
 }

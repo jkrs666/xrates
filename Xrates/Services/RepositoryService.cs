@@ -59,14 +59,16 @@ public class RepositoryService
         return await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<int> UpdateIntegration(string id, Integration newIntegration)
+    public async Task<int> UpdateIntegration(string id, UpdateIntegrationParams uip)
     {
         return await _dbContext.Integrations
         .Where(i => i.Name == id)
-        .ExecuteUpdateAsync(setters => setters
-            .SetProperty(i => i.Name, newIntegration.Name)
-            .SetProperty(i => i.Url, newIntegration.Url)
-            .SetProperty(i => i.FreqSeconds, newIntegration.FreqSeconds)
+        .ExecuteUpdateAsync(setters =>
+            setters
+            .SetProperty(i => i.Name, i => uip.Name ?? i.Name)
+            .SetProperty(i => i.Url, i => uip.Url ?? i.Url)
+            .SetProperty(i => i.FreqSeconds, i => uip.FreqSeconds ?? i.FreqSeconds)
+            .SetProperty(i => i.Enabled, i => uip.Enabled ?? i.Enabled)
     );
     }
 
@@ -75,6 +77,22 @@ public class RepositoryService
         return await _dbContext.Integrations
         .Where(i => i.Name == id)
         .ExecuteDeleteAsync();
+    }
+
+    public async Task<List<Integration>> GetEnabledIntegrationsSorted()
+    {
+        return await _dbContext.Integrations.Where(i => i.Enabled == true).OrderBy(i => i.Priority).ToListAsync();
+
+    }
+
+    public async Task<int> DisableIntegration(string id)
+    {
+        return await UpdateIntegration(id, new UpdateIntegrationParams { Enabled = false });
+    }
+
+    public async Task<int> EnableIntegration(string id)
+    {
+        return await UpdateIntegration(id, new UpdateIntegrationParams { Enabled = true });
     }
 
     public int SaveRatesCombinations(DateTime timestamp, List<Rate> ratesUsd)

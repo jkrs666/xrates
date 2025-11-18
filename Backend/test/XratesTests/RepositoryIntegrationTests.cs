@@ -5,10 +5,11 @@ namespace XratesTests;
     ordererAssemblyName: "XratesTests")]
 public class RepositoryIntegrationsTests
 {
-    Integration i1 = new Integration(Name: "errorTest", Url: "invalidUrl", FreqSeconds: 10, Priority: 0, Enabled: true);
-    Integration i2 = new Integration(Name: "example", Url: "https://example.com", FreqSeconds: 10, Priority: 0, Enabled: true);
-    Integration i3 = new Integration(Name: "frankfurter", Url: "https://api.frankfurter.dev/v1/latest?base=USD", FreqSeconds: 10, Priority: 1, Enabled: true);
-    Integration testIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true);
+
+    Integration i1 = new Integration("errorTest", "invalidUrl", 10, 0, true, "USD", "date", "rates");
+    Integration i2 = new Integration("example", "https://example.com", 10, 0, true, "USD", "timestamp", "rates");
+    Integration i3 = new Integration("frankfurter", "https://api.frankfurter.dev/v1/latest?base=USD", 10, 1, true, "USD", "timestamp", "rates");
+    Integration testIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true, "USD", "timestamp", "rates");
     RepositoryService repo = RepositoryServiceFactory.Create();
 
     [Fact]
@@ -38,7 +39,7 @@ public class RepositoryIntegrationsTests
     [Fact]
     public async Task IT3_DisableIntegration()
     {
-        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, false);
+        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, false, "USD", "timestamp", "rates");
 
         int updatedCount = await repo.DisableIntegration("testIntegration");
         Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");
@@ -58,7 +59,7 @@ public class RepositoryIntegrationsTests
     [Fact]
     public async Task IT5_EnableIntegration()
     {
-        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true);
+        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true, "USD", "timestamp", "rates");
 
         int updatedCount = await repo.EnableIntegration("testIntegration");
         Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");
@@ -70,7 +71,7 @@ public class RepositoryIntegrationsTests
     [Fact]
     public async Task IT6_UpdateIntegration()
     {
-        Integration expectedIntegration = new Integration("testIntegration", "test.com", 10, 1000, true);
+        Integration expectedIntegration = new Integration("testIntegration", "test.com", 10, 1000, true, "USD", "timestamp", "rates");
 
         int updatedCount = await repo.UpdateIntegration("testIntegration", new UpdateIntegrationParams { Url = "test.com", Priority = 1000 });
         Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");

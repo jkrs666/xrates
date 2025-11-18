@@ -23,12 +23,12 @@ public class ExternalApiService
 
         var jsonString = await response.Content.ReadAsStringAsync();
         using JsonDocument doc = JsonDocument.Parse(jsonString);
-        var ratesElement = doc.RootElement.GetProperty("rates");
+        var ratesElement = doc.RootElement.GetProperty(integration.ratesJsonField);
         var ratesDict = JsonSerializer.Deserialize<Dictionary<string, decimal>>(ratesElement.GetRawText());
-        var timestamp = ExtractTimestamp(doc.RootElement.GetProperty("date"));
+        var timestamp = ExtractTimestamp(doc.RootElement.GetProperty(integration.timestampJsonField));
         var ratesUsd = ratesDict.ToList().Select(r => new Rate(
                 Timestamp: timestamp,
-                Base: "USD",
+                Base: integration.BaseCurrency,
                 Quote: r.Key,
                 Value: r.Value
         )).ToList();

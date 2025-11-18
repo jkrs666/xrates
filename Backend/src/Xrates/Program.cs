@@ -33,7 +33,8 @@ builder.Services.AddScoped<IDatabase>(sp =>
     return redis.GetDatabase();
 });
 
-builder.Services.AddScoped<IRepositoryService, IRepositoryService>();
+builder.Services.AddScoped<ConvertService>();
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddHttpClient<ExternalApiService>();
 builder.Services.AddHostedService<InitializationService>();
 builder.Services.AddHostedService<PeriodicFetchService>();

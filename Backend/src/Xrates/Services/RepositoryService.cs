@@ -96,16 +96,16 @@ public class RepositoryService : IRepositoryService
         return await UpdateIntegration(id, new UpdateIntegrationParams { Enabled = true });
     }
 
-    public int SaveRatesCombinations(DateTime timestamp, List<Rate> ratesUsd)
+    public int SaveRatesCombinations(DateTime timestamp, List<Rate> ratesSingleBase)
     {
         //USD-USD
         _dbContext.Rates.Add(new Rate(
                     Timestamp: timestamp,
-                    Base: "USD",
-                    Quote: "USD",
+                    Base: ratesSingleBase[0].Base,
+                    Quote: ratesSingleBase[0].Base,
                     Value: 1.0M));
         //add USD base and inverse
-        foreach (Rate r in ratesUsd)
+        foreach (Rate r in ratesSingleBase)
         {
             _dbContext.Rates.Add(r);
             _dbContext.Rates.Add(new Rate(
@@ -116,9 +116,9 @@ public class RepositoryService : IRepositoryService
         }
 
         // cartesian
-        foreach (Rate a in ratesUsd)
+        foreach (Rate a in ratesSingleBase)
         {
-            foreach (Rate b in ratesUsd)
+            foreach (Rate b in ratesSingleBase)
             {
                 _dbContext.Rates.Add(new Rate(
                             Timestamp: timestamp,

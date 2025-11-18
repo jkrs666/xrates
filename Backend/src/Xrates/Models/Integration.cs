@@ -4,7 +4,10 @@ public record Integration
     string Url,
     int FreqSeconds,
     int Priority,
-    bool Enabled
+    bool Enabled,
+    string BaseCurrency,
+    string timestampJsonField,
+    string ratesJsonField
 //TODO: encrypt
 //public string ApiKey { get; set; }
 );

@@ -21,9 +21,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Integration>()
         .HasData(
             [
-            new Integration ( Name:"errorTest", Url:"invalidUrl", FreqSeconds: 10, Priority:0, Enabled:true),
-            new Integration ( Name:"example", Url:"https://example.com", FreqSeconds: 10, Priority:0, Enabled:true),
-            new Integration ( Name:"frankfurter", Url:"https://api.frankfurter.dev/v1/latest?base=USD", FreqSeconds: 10, Priority:1, Enabled:true)
+            new Integration ( Name:"errorTest", Url:"invalidUrl", FreqSeconds: 10, Priority:0, Enabled:true, "USD", "date", "rates"),
+            new Integration ( Name:"example", Url:"https://example.com", FreqSeconds: 10, Priority:0, Enabled:true, "USD", "timestamp", "rates"),
+            new Integration ( Name:"frankfurter", Url:"https://api.frankfurter.dev/v1/latest?base=USD", FreqSeconds: 10, Priority:1, Enabled:true, "USD", "date", "rates")
         ]
         );
     }

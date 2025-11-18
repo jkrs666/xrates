@@ -8,13 +8,11 @@ public class IntegrationsController : ControllerBase
 {
 
     private readonly ILogger<IntegrationsController> _logger;
-    private readonly ExternalApiService _externalApiService;
     private readonly IRepositoryService _repo;
 
-    public IntegrationsController(ILogger<IntegrationsController> logger, ExternalApiService externalApiService, IRepositoryService repo)
+    public IntegrationsController(ILogger<IntegrationsController> logger, IRepositoryService repo)
     {
         _logger = logger;
-        _externalApiService = externalApiService;
         _repo = repo;
     }
 

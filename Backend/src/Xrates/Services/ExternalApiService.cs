@@ -1,4 +1,3 @@
-using StackExchange.Redis;
 using System.Text.Json;
 
 
@@ -6,13 +5,11 @@ public class ExternalApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<ExternalApiService> _logger;
-    private readonly IDatabase _redis;
 
-    public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IDatabase redis)
+    public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
-        _redis = redis;
     }
 
     public async Task<ExternalApiResponse> Call(Integration integration)

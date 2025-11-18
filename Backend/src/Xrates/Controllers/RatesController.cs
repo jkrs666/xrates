@@ -23,9 +23,19 @@ public class RatesController : ControllerBase
         return await _repo.GetAllRates();
     }
 
-    [HttpGet("{id}", Name = "GetRate")]
-    public async Task<RateCompact> GetRate(string id)
+    [HttpGet("{pair}", Name = "GetRate")]
+    public async Task<IActionResult> GetRate(string pair)
     {
-        return await _repo.GetRate(id);
+        RateCompact rate;
+        try
+        {
+            rate = await _repo.GetRate(pair);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return NotFound(new { message = $"Rate {pair} not found" });
+        }
+        return Ok(rate);
     }
 }

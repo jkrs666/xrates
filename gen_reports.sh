@@ -1,5 +1,6 @@
+dir="$PWD/Backend/test/XratesTests/TestResults/*/coverage.cobertura.xml"
 reportgenerator \
--reports:"/home/satyr/Desktop/archive/archive/repos/k2m_assesment/Backend/test/XratesTests/TestResults/*/coverage.cobertura.xml" \
+-reports:"$dir" \
 -targetdir:"coveragereport" \
 -reporttypes:Html \
 -classfilters:"-Xrates.Migrations*,-Program"

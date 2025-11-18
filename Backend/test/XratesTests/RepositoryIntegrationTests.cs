@@ -48,7 +48,15 @@ public class RepositoryIntegrationsTests
     }
 
     [Fact]
-    public async Task IT4_EnableIntegration()
+    public async Task IT4_GetEnabledIntegrationsSorted()
+    {
+        var allIntegrations = await repo.GetEnabledIntegrationsSorted();
+
+        Assert.Equal(new List<Integration> { i1, i2, i3 }, allIntegrations.ToList());
+    }
+
+    [Fact]
+    public async Task IT5_EnableIntegration()
     {
         Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true);
 
@@ -60,7 +68,7 @@ public class RepositoryIntegrationsTests
     }
 
     [Fact]
-    public async Task IT5_UpdateIntegration()
+    public async Task IT6_UpdateIntegration()
     {
         Integration expectedIntegration = new Integration("testIntegration", "test.com", 10, 1000, true);
 
@@ -70,5 +78,13 @@ public class RepositoryIntegrationsTests
         Assert.Equal(1, updatedCount);
         Assert.Equal(expectedIntegration, updatedIntegration);
     }
+
+    [Fact]
+    public async Task IT7_DeleteIntegration()
+    {
+        int deleteCount = await repo.DeleteIntegration("testIntegration");
+        Assert.Equal(1, deleteCount);
+    }
+
 
 }

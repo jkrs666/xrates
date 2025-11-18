@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 
 namespace Xrates.Controllers;
@@ -24,7 +25,7 @@ public class RatesController : ControllerBase
     }
 
     [HttpGet("{pair}", Name = "GetRate")]
-    public async Task<IActionResult> GetRate(string pair)
+    public async Task<IActionResult> GetRate([DefaultValue("USD-EUR")] string pair)
     {
         RateCompact rate;
         try

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace Xrates.Controllers;
 
@@ -52,7 +53,7 @@ public class IntegrationsController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetIntegration")]
-    public async Task<Integration> Get(string id)
+    public async Task<Integration> Get([DefaultValue("frankfurter")] string id)
     {
         return await _repo.GetIntegrationById(id);
     }

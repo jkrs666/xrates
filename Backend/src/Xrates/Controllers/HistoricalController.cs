@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 
 namespace Xrates.Controllers;
@@ -18,7 +19,11 @@ public class HistoricalController : ControllerBase
     }
 
     [HttpGet(Name = "Historical")]
-    public async Task<HistoricalResponse> Historical(DateTime start, DateTime end, string to, string from = "USD")
+    public async Task<HistoricalResponse> Historical(
+        [DefaultValue("2025-1-1")] DateTime start,
+        [DefaultValue("2026-1-1")] DateTime end,
+        [DefaultValue("EUR")] string to,
+            string from = "USD")
     {
         var rates = await _repo.GetHistoricalRates(start.ToUniversalTime(), end.ToUniversalTime(), from, to);
         var historicalRates = rates.Select(r => new RateCompact(r.Timestamp, r.Value)).ToList();

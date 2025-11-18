@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 
 namespace Xrates.Controllers;
@@ -18,7 +19,11 @@ public class ConvertController : ControllerBase
     }
 
     [HttpGet(Name = "Convert")]
-    public async Task<IActionResult> Convert(string from, string to, decimal amount)
+    public async Task<IActionResult> Convert(
+            [DefaultValue("USD")] string from,
+            [DefaultValue("EUR")] string to,
+            [DefaultValue("10.0")] decimal amount
+    )
     {
         var rateKey = $"{from}-{to}";
         RateCompact rate;

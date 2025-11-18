@@ -1,0 +1,74 @@
+namespace XratesTests;
+
+[TestCaseOrderer(
+    ordererTypeName: "XratesTests.AlphabeticalOrderer",
+    ordererAssemblyName: "XratesTests")]
+public class RepositoryIntegrationsTests
+{
+    Integration i1 = new Integration(Name: "errorTest", Url: "invalidUrl", FreqSeconds: 10, Priority: 0, Enabled: true);
+    Integration i2 = new Integration(Name: "example", Url: "https://example.com", FreqSeconds: 10, Priority: 0, Enabled: true);
+    Integration i3 = new Integration(Name: "frankfurter", Url: "https://api.frankfurter.dev/v1/latest?base=USD", FreqSeconds: 10, Priority: 1, Enabled: true);
+    Integration testIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true);
+    RepositoryService repo = RepositoryServiceFactory.Create();
+
+    [Fact]
+    public async Task IT0_CreateIntegration()
+    {
+        int inserted = await repo.CreateIntegration(testIntegration);
+
+        Assert.Equal(1, inserted);
+    }
+
+    [Fact]
+    public async Task IT1_GetIntegration()
+    {
+        Integration insertedIntegration = await repo.GetIntegrationById("testIntegration");
+
+        Assert.Equal(testIntegration, insertedIntegration);
+    }
+
+    [Fact]
+    public async Task IT2_GetAllIntegrations()
+    {
+        var allIntegrations = await repo.GetIntegrations();
+
+        Assert.Equal(new List<Integration> { i1, i2, i3, testIntegration }, allIntegrations.ToList());
+    }
+
+    [Fact]
+    public async Task IT3_DisableIntegration()
+    {
+        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, false);
+
+        int updatedCount = await repo.DisableIntegration("testIntegration");
+        Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");
+
+        Assert.Equal(1, updatedCount);
+        Assert.Equal(expectedIntegration, updatedIntegration);
+    }
+
+    [Fact]
+    public async Task IT4_EnableIntegration()
+    {
+        Integration expectedIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true);
+
+        int updatedCount = await repo.EnableIntegration("testIntegration");
+        Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");
+
+        Assert.Equal(1, updatedCount);
+        Assert.Equal(expectedIntegration, updatedIntegration);
+    }
+
+    [Fact]
+    public async Task IT5_UpdateIntegration()
+    {
+        Integration expectedIntegration = new Integration("testIntegration", "test.com", 10, 1000, true);
+
+        int updatedCount = await repo.UpdateIntegration("testIntegration", new UpdateIntegrationParams { Url = "test.com", Priority = 1000 });
+        Integration updatedIntegration = await repo.GetIntegrationById("testIntegration");
+
+        Assert.Equal(1, updatedCount);
+        Assert.Equal(expectedIntegration, updatedIntegration);
+    }
+
+}

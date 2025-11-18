@@ -5,18 +5,16 @@ using System.Text.Json;
 public class RepositoryService
 {
     private readonly ILogger<ExternalApiService> _logger;
-    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+    private readonly AppDbContext _dbContext;
     private readonly IConnectionMultiplexer _redisConnection;
     private readonly ConvertService _convertService;
-    private AppDbContext _dbContext;
     private IDatabase _redisDb;
 
-    public RepositoryService(ILogger<ExternalApiService> logger, IDbContextFactory<AppDbContext> dbContextFactory, IConnectionMultiplexer redisConnection, ConvertService convertService)
+    public RepositoryService(ILogger<ExternalApiService> logger, AppDbContext dbContext, IConnectionMultiplexer redisConnection, ConvertService convertService)
     {
         _logger = logger;
-        _dbContextFactory = dbContextFactory;
         _redisConnection = redisConnection;
-        _dbContext = dbContextFactory.CreateDbContext();
+        _dbContext = dbContext;
         _redisDb = redisConnection.GetDatabase();
         _convertService = convertService;
     }
@@ -29,15 +27,16 @@ public class RepositoryService
             kvp => JsonSerializer.Deserialize<RateCompact>(kvp.Value));
     }
 
-    public async Task<String?> GetRate(string quote)
+    public async Task<RateCompact> GetRate(string quote)
     {
-        return await _redisDb.HashGetAsync("rates", quote);
+        var redisValue = await _redisDb.HashGetAsync("rates", quote);
+        return JsonSerializer.Deserialize<RateCompact>(redisValue);
     }
 
     public async Task<List<Rate>> GetHistoricalRates(DateTime start, DateTime end, string @base, string quote)
     {
         return await _dbContext.Rates
-            .Where(r => r.Base == @base && r.Quote == quote && r.Timestamp > start && r.Timestamp < end)
+            .Where(r => r.Base == @base && r.Quote == quote && r.Timestamp >= start && r.Timestamp <= end)
             .GroupBy(r => DateOnly.FromDateTime(r.Timestamp))
             .Select(g => g.OrderByDescending(r => r.Timestamp).First())
             .ToListAsync();
@@ -68,6 +67,7 @@ public class RepositoryService
             .SetProperty(i => i.Name, i => uip.Name ?? i.Name)
             .SetProperty(i => i.Url, i => uip.Url ?? i.Url)
             .SetProperty(i => i.FreqSeconds, i => uip.FreqSeconds ?? i.FreqSeconds)
+            .SetProperty(i => i.Priority, i => uip.Priority ?? i.Priority)
             .SetProperty(i => i.Enabled, i => uip.Enabled ?? i.Enabled)
     );
     }

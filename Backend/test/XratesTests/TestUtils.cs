@@ -1,11 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Moq;
 
-[CollectionDefinition("Sequential", DisableParallelization = true)]
-public class SequentialCollection { }
 
 public class RedisConnectionFactory
 {
@@ -28,14 +25,17 @@ public class RepositoryServiceFactory
 {
     public static RepositoryService Create()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb")
-            .Options;
-        var dbFactory = new PooledDbContextFactory<AppDbContext>(options);
+        var dbOptionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+        .UseNpgsql("Host=localhost;Port=9999;Database=postgres;Username=postgres;Password=pg_test")
+        .UseLowerCaseNamingConvention()
+        .Options;
+        var context = new AppDbContext(dbOptionsBuilder);
+        context.Database.EnsureCreated();
+
         var logger = Mock.Of<ILogger<ExternalApiService>>();
         var redis = RedisConnectionFactory.Create();
         var convertService = new ConvertService(logger);
-        return new RepositoryService(logger, dbFactory, redis, convertService);
+        return new RepositoryService(logger, context, redis, convertService);
     }
 
 }

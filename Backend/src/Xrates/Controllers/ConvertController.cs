@@ -22,13 +22,9 @@ public class ConvertController : ControllerBase
     [HttpGet(Name = "Convert")]
     public async Task<ConvertResponse> Convert(string from, string to, decimal amount)
     {
-        string fromRate = await _repositoryService.GetRate(from);
-        string toRate = await _repositoryService.GetRate(to);
-        decimal a;
-        decimal b;
-        decimal.TryParse(fromRate, out a);
-        decimal.TryParse(toRate, out b);
-        decimal rate = _convertService.CalculateConversionRate(a, b);
+        RateCompact fromRate = await _repositoryService.GetRate(from);
+        RateCompact toRate = await _repositoryService.GetRate(to);
+        decimal rate = _convertService.CalculateConversionRate(fromRate.Rate, toRate.Rate);
         return new ConvertResponse(
             Rate: rate,
             Amount: _convertService.Convert(rate, amount)

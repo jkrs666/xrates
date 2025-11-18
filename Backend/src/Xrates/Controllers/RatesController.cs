@@ -24,8 +24,8 @@ public class RatesController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetRate")]
-    public async Task<String> GetRate(string id)
+    public async Task<RateCompact> GetRate(string id)
     {
-        return await _repositoryService.GetRate(id) ?? "";
+        return await _repositoryService.GetRate(id);
     }
 }

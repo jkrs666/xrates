@@ -65,7 +65,8 @@ public class PeriodicFetchService : BackgroundService
             _logger.LogInformation($"Fetching {integration.Name}");
             var res = await externalApiService.Call(integration);
             var inserts = repositoryService.SaveRatesCombinations(res.Timestamp, res.Rates);
-            _logger.LogInformation("Inserted {} rates.", inserts.ToString());
+            await repositoryService.RefreshCache();
+            _logger.LogInformation($"Inserted {inserts} rates");
             return true;
         }
         catch (Exception e)

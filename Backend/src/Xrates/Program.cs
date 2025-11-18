@@ -10,11 +10,13 @@ builder.Services.AddHttpLogging(o =>
     o.LoggingFields = HttpLoggingFields.All;
 });
 
-builder.Services.AddDbContextFactory<AppDbContext>(options =>
+Action<DbContextOptionsBuilder> dbOptionsBuilder = options =>
     options
     .UseNpgsql(builder.Configuration.GetConnectionString("Postgres"))
-    .UseLowerCaseNamingConvention()
-);
+    .UseLowerCaseNamingConvention();
+
+builder.Services.AddDbContextFactory<AppDbContext>(dbOptionsBuilder);
+builder.Services.AddDbContext<AppDbContext>();
 
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>

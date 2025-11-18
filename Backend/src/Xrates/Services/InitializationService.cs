@@ -25,7 +25,7 @@ public class InitializationService : IHostedService
     {
         _logger.LogInformation("Initialization started");
         using var scope = _serviceProvider.CreateScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
+        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
         var redis = scope.ServiceProvider.GetRequiredService<IDatabase>();
         var externalApiService = scope.ServiceProvider.GetRequiredService<ExternalApiService>();
         var repositoryService = scope.ServiceProvider.GetRequiredService<RepositoryService>();
@@ -37,13 +37,14 @@ public class InitializationService : IHostedService
         string jsonString = File.ReadAllText("./data.json");
         var data = JsonSerializer.Deserialize<HistoricalDataJson>(jsonString);
 
-        data.Rates.ToList().ForEach(kv =>
+        foreach (var kv in data.Rates.ToList())
         {
             var rates = new List<Rate>();
             var date = DateTime.Parse(kv.Key).ToUniversalTime();
             kv.Value.ToList().ForEach(rkv => rates.Add(new Rate(date, "USD", rkv.Key, rkv.Value)));
-            repositoryService.SaveRatesCombinations(rates.Last().Timestamp, rates);
-        });
+            var inserted = repositoryService.SaveRatesCombinations(rates.Last().Timestamp, rates);
+            _logger.LogInformation($"Inserted {inserted} rows");
+        }
 
         _logger.LogInformation("Warming cache");
         await repositoryService.RefreshCache();

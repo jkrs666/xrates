@@ -8,7 +8,7 @@ public class RepositoryIntegrationsTests
 
     Integration i1 = new Integration("errorTest", "invalidUrl", 10, 0, true, "USD", "date", "rates");
     Integration i2 = new Integration("example", "https://example.com", 10, 0, true, "USD", "timestamp", "rates");
-    Integration i3 = new Integration("frankfurter", "https://api.frankfurter.dev/v1/latest?base=USD", 10, 1, true, "USD", "timestamp", "rates");
+    Integration i3 = new Integration("frankfurter", "https://api.frankfurter.dev/v1/latest?base=USD", 10, 1, true, "USD", "date", "rates");
     Integration testIntegration = new Integration("testIntegration", "https://example.com", 10, 1, true, "USD", "timestamp", "rates");
     RepositoryService repo = RepositoryServiceFactory.Create();
 

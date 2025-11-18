@@ -18,14 +18,23 @@ public class ConvertController : ControllerBase
     }
 
     [HttpGet(Name = "Convert")]
-    public async Task<ConvertResponse> Convert(string from, string to, decimal amount)
+    public async Task<IActionResult> Convert(string from, string to, decimal amount)
     {
-        RateCompact rate = await _repo.GetRate($"{from}-{to}");
-        return new ConvertResponse(
+        var rateKey = $"{from}-{to}";
+        RateCompact rate;
+        try
+        {
+            rate = await _repo.GetRate(rateKey);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return NotFound(new { message = $"Rate {rateKey} not found" });
+        }
+        return Ok(new ConvertResponse(
             Rate: rate.Rate,
             Amount: rate.Rate * amount
-        );
-
+        ));
     }
 }
 

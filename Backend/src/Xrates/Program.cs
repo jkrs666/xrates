@@ -40,10 +40,16 @@ builder.Services.AddHostedService<InitializationService>();
 builder.Services.AddHostedService<PeriodicFetchService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new DecimalConverter()));
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
 app.MapOpenApi();
 app.UseHttpsRedirection();
 app.UseAuthorization();

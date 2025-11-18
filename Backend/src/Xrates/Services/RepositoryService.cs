@@ -70,6 +70,9 @@ public class RepositoryService : IRepositoryService
             .SetProperty(i => i.FreqSeconds, i => uip.FreqSeconds ?? i.FreqSeconds)
             .SetProperty(i => i.Priority, i => uip.Priority ?? i.Priority)
             .SetProperty(i => i.Enabled, i => uip.Enabled ?? i.Enabled)
+            .SetProperty(i => i.BaseCurrency, i => uip.BaseCurrency ?? i.BaseCurrency)
+            .SetProperty(i => i.timestampJsonField, i => uip.timestampJsonField ?? i.timestampJsonField)
+            .SetProperty(i => i.ratesJsonField, i => uip.ratesJsonField ?? i.ratesJsonField)
     );
     }
 

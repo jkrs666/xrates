@@ -21,7 +21,7 @@ public class HistoricalController : ControllerBase
     public async Task<HistoricalResponse> Historical(DateTime start, DateTime end, string to, string from = "USD")
     {
         var rates = await _repo.GetHistoricalRates(start.ToUniversalTime(), end.ToUniversalTime(), from, to);
-        var historicalRates = rates.Select(r => new HistoricalRate(r.Timestamp, r.Value));
+        var historicalRates = rates.Select(r => new RateCompact(r.Timestamp, r.Value)).ToList();
         return new HistoricalResponse(From: from, To: to, Start: start, End: end, Rates: historicalRates);
     }
 }

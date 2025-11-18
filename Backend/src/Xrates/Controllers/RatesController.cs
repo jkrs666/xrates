@@ -9,23 +9,23 @@ public class RatesController : ControllerBase
 {
 
     private readonly ILogger<RatesController> _logger;
-    private readonly RepositoryService _repositoryService;
+    private readonly IRepositoryService _repo;
 
-    public RatesController(ILogger<RatesController> logger, RepositoryService repositoryService)
+    public RatesController(ILogger<RatesController> logger, IRepositoryService repo)
     {
         _logger = logger;
-        _repositoryService = repositoryService;
+        _repo = repo;
     }
 
     [HttpGet(Name = "GetAllRates")]
     public async Task<Dictionary<string, RateCompact>> GetAllRates()
     {
-        return await _repositoryService.GetAllRates();
+        return await _repo.GetAllRates();
     }
 
     [HttpGet("{id}", Name = "GetRate")]
     public async Task<RateCompact> GetRate(string id)
     {
-        return await _repositoryService.GetRate(id);
+        return await _repo.GetRate(id);
     }
 }

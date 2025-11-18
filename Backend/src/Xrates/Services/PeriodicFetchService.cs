@@ -36,7 +36,7 @@ public class PeriodicFetchService : BackgroundService
         int count = Interlocked.Increment(ref _executionCount);
         _logger.LogInformation("Timed Hosted Service is working. Count: {Count}", count);
 
-        var repositoryService = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<RepositoryService>();
+        var repositoryService = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IRepositoryService>();
         var integrations = await repositoryService.GetEnabledIntegrationsSorted();
         var primaryIntegration = integrations.First();
 
@@ -56,7 +56,7 @@ public class PeriodicFetchService : BackgroundService
 
     }
 
-    private async Task<bool> FetchAndInsert(Integration integration, RepositoryService repositoryService)
+    private async Task<bool> FetchAndInsert(Integration integration, IRepositoryService repositoryService)
     {
         var externalApiService = _serviceProvider.GetRequiredService<ExternalApiService>();
 

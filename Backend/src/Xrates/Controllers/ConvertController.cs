@@ -9,25 +9,21 @@ public class ConvertController : ControllerBase
 {
 
     private readonly ILogger<ConvertController> _logger;
-    private readonly RepositoryService _repositoryService;
-    private readonly ConvertService _convertService;
+    private readonly IRepositoryService _repo;
 
-    public ConvertController(ILogger<ConvertController> logger, RepositoryService repositoryService, ConvertService convertService)
+    public ConvertController(ILogger<ConvertController> logger, IRepositoryService repo)
     {
         _logger = logger;
-        _repositoryService = repositoryService;
-        _convertService = convertService;
+        _repo = repo;
     }
 
     [HttpGet(Name = "Convert")]
     public async Task<ConvertResponse> Convert(string from, string to, decimal amount)
     {
-        RateCompact fromRate = await _repositoryService.GetRate(from);
-        RateCompact toRate = await _repositoryService.GetRate(to);
-        decimal rate = _convertService.CalculateConversionRate(fromRate.Rate, toRate.Rate);
+        RateCompact rate = await _repo.GetRate($"{from}-{to}");
         return new ConvertResponse(
-            Rate: rate,
-            Amount: _convertService.Convert(rate, amount)
+            Rate: rate.Rate,
+            Amount: rate.Rate * amount
         );
 
     }

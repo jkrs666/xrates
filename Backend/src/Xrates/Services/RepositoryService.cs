@@ -2,15 +2,15 @@ using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
-public class RepositoryService
+public class RepositoryService : IRepositoryService
 {
-    private readonly ILogger<ExternalApiService> _logger;
+    private readonly ILogger<RepositoryService> _logger;
     private readonly AppDbContext _dbContext;
     private readonly IConnectionMultiplexer _redisConnection;
     private readonly ConvertService _convertService;
     private IDatabase _redisDb;
 
-    public RepositoryService(ILogger<ExternalApiService> logger, AppDbContext dbContext, IConnectionMultiplexer redisConnection, ConvertService convertService)
+    public RepositoryService(ILogger<RepositoryService> logger, AppDbContext dbContext, IConnectionMultiplexer redisConnection, ConvertService convertService)
     {
         _logger = logger;
         _redisConnection = redisConnection;
@@ -27,9 +27,10 @@ public class RepositoryService
             kvp => JsonSerializer.Deserialize<RateCompact>(kvp.Value));
     }
 
-    public async Task<RateCompact> GetRate(string quote)
+    // example pair = "USD-EUR"
+    public async Task<RateCompact> GetRate(string pair)
     {
-        var redisValue = await _redisDb.HashGetAsync("rates", quote);
+        var redisValue = await _redisDb.HashGetAsync("rates", pair);
         return JsonSerializer.Deserialize<RateCompact>(redisValue);
     }
 

@@ -28,7 +28,7 @@ public class InitializationService : IHostedService
         var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<AppDbContext>>().CreateDbContext();
         var redis = scope.ServiceProvider.GetRequiredService<IDatabase>();
         var externalApiService = scope.ServiceProvider.GetRequiredService<ExternalApiService>();
-        var repositoryService = scope.ServiceProvider.GetRequiredService<RepositoryService>();
+        var repositoryService = scope.ServiceProvider.GetRequiredService<IRepositoryService>();
 
         _logger.LogInformation("Running migrations");
         await dbContext.Database.MigrateAsync();

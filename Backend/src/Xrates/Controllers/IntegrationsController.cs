@@ -9,19 +9,19 @@ public class IntegrationsController : ControllerBase
 
     private readonly ILogger<IntegrationsController> _logger;
     private readonly ExternalApiService _externalApiService;
-    private readonly RepositoryService _repositoryService;
+    private readonly IRepositoryService _repo;
 
-    public IntegrationsController(ILogger<IntegrationsController> logger, ExternalApiService externalApiService, RepositoryService repositoryService)
+    public IntegrationsController(ILogger<IntegrationsController> logger, ExternalApiService externalApiService, IRepositoryService repo)
     {
         _logger = logger;
         _externalApiService = externalApiService;
-        _repositoryService = repositoryService;
+        _repo = repo;
     }
 
     [HttpGet(Name = "ListIntegrations")]
     public async Task<IEnumerable<Integration>> GetAll()
     {
-        return await _repositoryService.GetIntegrations();
+        return await _repo.GetIntegrations();
     }
 
     [HttpPost(Name = "CreateIntegration")]
@@ -35,7 +35,7 @@ public class IntegrationsController : ControllerBase
         int count;
         try
         {
-            count = await _repositoryService.CreateIntegration(integration);
+            count = await _repo.CreateIntegration(integration);
         }
         catch (Exception e)
         {
@@ -56,7 +56,7 @@ public class IntegrationsController : ControllerBase
     [HttpGet("{id}", Name = "GetIntegration")]
     public async Task<Integration> Get(string id)
     {
-        return await _repositoryService.GetIntegrationById(id);
+        return await _repo.GetIntegrationById(id);
     }
 
     [HttpPut("{id}", Name = "UpdateIntegration")]
@@ -70,7 +70,7 @@ public class IntegrationsController : ControllerBase
         int count;
         try
         {
-            count = await _repositoryService.UpdateIntegration(id, uip);
+            count = await _repo.UpdateIntegration(id, uip);
         }
         catch (Exception e)
         {
@@ -95,7 +95,7 @@ public class IntegrationsController : ControllerBase
 
         try
         {
-            count = await _repositoryService.DeleteIntegration(id);
+            count = await _repo.DeleteIntegration(id);
         }
         catch (Exception e)
         {

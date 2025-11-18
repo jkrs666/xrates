@@ -32,9 +32,11 @@ public class RepositoryServiceFactory
         var context = new AppDbContext(dbOptionsBuilder);
         context.Database.EnsureCreated();
 
-        var logger = Mock.Of<ILogger<ExternalApiService>>();
+        var logger = Mock.Of<ILogger<RepositoryService>>();
+        var logger2 = Mock.Of<ILogger<ConvertService>>();
+
         var redis = RedisConnectionFactory.Create();
-        var convertService = new ConvertService(logger);
+        var convertService = new ConvertService(logger2);
         return new RepositoryService(logger, context, redis, convertService);
     }
 

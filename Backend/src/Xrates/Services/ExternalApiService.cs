@@ -7,14 +7,12 @@ public class ExternalApiService
     private readonly HttpClient _httpClient;
     private readonly ILogger<ExternalApiService> _logger;
     private readonly IDatabase _redis;
-    private readonly ConvertService _convertService;
 
-    public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IDatabase redis, ConvertService convertService)
+    public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IDatabase redis)
     {
         _httpClient = httpClient;
         _logger = logger;
         _redis = redis;
-        _convertService = convertService;
     }
 
     public async Task<ExternalApiResponse> Call(Integration integration)

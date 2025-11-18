@@ -1,8 +1,8 @@
 public class ConvertService
 {
-    private readonly ILogger<ExternalApiService> _logger;
+    private readonly ILogger<ConvertService> _logger;
 
-    public ConvertService(ILogger<ExternalApiService> logger)
+    public ConvertService(ILogger<ConvertService> logger)
     {
         _logger = logger;
     }
@@ -11,15 +11,4 @@ public class ConvertService
     {
         return (1 / from) * to;
     }
-
-    public decimal Convert(decimal rate, decimal amount)
-    {
-        return rate * amount;
-    }
-
-    public decimal Convert(decimal from, decimal to, decimal amount)
-    {
-        return CalculateConversionRate(from, to) * amount;
-    }
-
 }

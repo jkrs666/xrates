@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Rate>().HasKey(r => r.Id);
+        modelBuilder.Entity<Rate>().HasIndex(r => new { r.Base, r.Quote });
         modelBuilder.Entity<Rate>().Property(r => r.Id).UseIdentityAlwaysColumn();
 
         modelBuilder.Entity<Integration>().HasKey(r => r.Name);
